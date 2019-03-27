@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const Event = require('../models/event');
+const mongoose = require('mongoose');
 
 
 // get method
@@ -20,9 +22,25 @@ router.get('/:eventId', (req, res) => {
 
 // post method 
 router.post("/", (req, res) => {
-    res.status(200).json({
-        message: 'handling post event'
+    const event = new Event({
+        _id: new mongoose.Types.ObjectId(),
+        nameEvent: req.body.name,
+        locationEvent: req.body.location,
+        timeEvent: req.body.time,
+        posterEvent: req.body.poster,
+        descEvent: req.body.desc,
+        organizerEvent: req.body.organizer,
+        categoryEvent: req.body.category
     })
+
+    event.save().then(result => {
+        console.log(result)
+    }).catch(err => {
+        console.log(err)
+    });
+
+
+    res.status(200).json(event)
 })
 
 // update method
