@@ -6,16 +6,19 @@ const mongoose = require('mongoose');
 
 // get method
 router.get('/', (req, res) => {
-    res.status(200).json({
-        message: 'handling get event'
+    Event.find().exec().then(events => {
+        res.json(events)
+    }).catch(err => {
+        res.json(err)
     })
 })
 
 router.get('/:eventId', (req, res) => {
     const id = req.params.eventId;
-    res.status(200).json({
-        message: "handling event with id : " + id
-
+    Event.findById(id).exec().then(event => {
+        res.json(event)
+    }).catch(err => {
+        res.json(err)
     })
 })
 
@@ -35,29 +38,46 @@ router.post("/", (req, res) => {
 
     event.save().then(result => {
         console.log(result)
+        res.status(200).json(event)
     }).catch(err => {
         console.log(err)
+        res.json(err)
     });
-
-
-    res.status(200).json(event)
 })
 
 // update method
 router.patch('/:eventId', (req, res) => {
     const id = req.params.eventId;
-    res.status(200).json({
-        message: "handling update event with id : " + id
 
+    Event.update({
+        _id: id
+    }, {
+        $set: {
+            nameEvent: req.body.name,
+            locationEvent: req.body.location,
+            timeEvent: req.body.time,
+            posterEvent: req.body.poster,
+            descEvent: req.body.desc,
+            organizerEvent: req.body.organizer,
+            categoryEvent: req.body.category
+        }
+    }).exec().then(result => {
+        res.send(result)
+    }).catch(err => {
+        res.send(err)
     })
 });
 
 // delete method
 router.delete('/:eventId', (req, res) => {
     const id = req.params.eventId;
-    res.status(200).json({
-        message: "delete event with id : " + id
-    });
+    Event.remove({
+        _id: id
+    }).exec().then(result => {
+        res.json(result)
+    }).catch(err => {
+        res.json(err)
+    })
 });
 
 module.exports = router;
