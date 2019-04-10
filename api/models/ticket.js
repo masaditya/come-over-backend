@@ -2,9 +2,6 @@ const mongoose = require('mongoose');
 
 const ticketSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
-    userTicket: {
-
-    },
     eventTicket: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Event',

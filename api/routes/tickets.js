@@ -17,7 +17,11 @@ router.get('/', (req, res) => {
 router.get('/:ticketId', (req, res) => {
     const id = req.params.ticketId;
     Ticket.findById(id).exec().then(ticket => {
-        res.json(ticket)
+        if (!ticket) {
+            res.json("Not Found")
+        } else {
+            res.json(ticket)
+        }
     }).catch(err => {
         res.json(err)
     })
@@ -26,51 +30,52 @@ router.get('/:ticketId', (req, res) => {
 
 // post method 
 router.post("/", (req, res) => {
-    Event.findById(req.body.event).then(event => {
+    Event.findById(req.body.eventTicket).then(
+        event => {
 
-        if (!event) {
-            return res.json({
-                "message": "event not found"
-            })
+            if (!event) {
+                return res.json("Not found")
+            }
+
+            const ticket = new Ticket({
+                _id: new mongoose.Types.ObjectId(),
+                eventTicket: req.body.event,
+                categoryTicket: req.body.category,
+                priceTicket: req.body.price
+            });
+
+
+            return ticket.save()
+
         }
-        const ticket = new Ticket({
-            _id: new mongoose.Types.ObjectId(),
-            userTicket: req.body.user,
-            eventTicket: req.body.event,
-            categoryTicket: req.body.category,
-            priceTicket: req.body.price
-        });
-
-
-        return ticket.save()
-
-    }).then(result => {
+    ).then(result => {
         res.json(result)
     }).catch(err => {
         res.json(err)
     })
 
+
 })
 
 // update method
-router.patch('/:ticketId', (req, res) => {
-    const id = req.params.ticketId;
-    Ticket.update({
-        _id: id
-    }, {
-        $set: {
-            nameEvent: req.body.name,
-            userTicket: req.body.user,
-            eventTicket: req.body.event,
-            categoryTicket: req.body.category,
-            priceTicket: req.body.price
-        }
-    }).exec().then(result => {
-        res.send(result)
-    }).catch(err => {
-        res.send(err)
-    })
-});
+// router.patch('/:ticketId', (req, res) => {
+//     const id = req.params.ticketId;
+//     Ticket.update({
+//         _id: id
+//     }, {
+//         $set: {
+//             nameEvent: req.body.name,
+//             userTicket: req.body.user,
+//             eventTicket: req.body.event,
+//             categoryTicket: req.body.category,
+//             priceTicket: req.body.price
+//         }
+//     }).exec().then(result => {
+//         res.send(result)
+//     }).catch(err => {
+//         res.send(err)
+//     })
+// });
 
 // delete method
 router.delete('/:ticketId', (req, res) => {

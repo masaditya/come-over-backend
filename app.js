@@ -13,6 +13,8 @@ mongoose.connect('mongodb+srv://new_user:new_user@mycluster-iwasj.mongodb.net/co
     useMongoClient: false
 })
 
+mongoose.Promise = global.Promise;
+
 // middleware
 
 app.use(morgan('dev'))
