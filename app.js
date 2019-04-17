@@ -13,7 +13,7 @@ mongoose.connect('mongodb+srv://new_user:new_user@mycluster-iwasj.mongodb.net/co
     useMongoClient: false
 })
 
-mongoose.Promise = global.Promise;
+//mongoose.Promise = global.Promise;
 
 // middleware
 
@@ -22,20 +22,34 @@ app.use(bodyParser.urlencoded({
     extended: false
 }))
 app.use(bodyParser.json());
-app.use('/event', eventRoutes);
-app.use('/ticket', ticketRoutes);
+app.use('/events', eventRoutes);
+app.use('/tickets', ticketRoutes);
 
 // CORS
 
+//app.use((req, res, next) => {
+//    res.header("Access-Control-Allow-Origin", "*");
+//    res.header("Access-COntrol-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+//    if (req.method === 'OPTIONS') {
+//        res.header("Access-Control-Allow-Methods", 'PUT, POST, PATCH, DELETE, GET');
+//        return res.status(200).json({})
+//    }
+//    next();
+//})
+
 app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-COntrol-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-    if (req.method === 'OPTIONS') {
-        res.header("Access-Control-Allow-Methods", 'PUT, POST, PATCH, DELETE, GET');
-        return res.status(200).json({})
-    }
-    next();
-})
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  if (req.method === "OPTION") {
+    res.header("Access-Control-Allow-Methods", "PUT, POST, PATCH, GET, DELETE");
+    return res.json({});
+  }
+  next();
+});
+mongoose.Promise = global.Promise;
 
 
 // error handling

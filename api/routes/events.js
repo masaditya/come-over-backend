@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 // get method
 router.get('/', (req, res) => {
     Event.find().exec().then(events => {
-        res.json(events)
+        res.status(200).json(events)
     }).catch(err => {
         res.json(err)
     })
