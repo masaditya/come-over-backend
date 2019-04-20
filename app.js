@@ -7,6 +7,7 @@ const mongoose = require("mongoose");
 // routes
 const eventRoutes = require("./api/routes/events");
 const ticketRoutes = require("./api/routes/tickets");
+const userRoutes = require('./api/routes/users');
 
 mongoose.connect(
   "mongodb+srv://new_user:new_user@mycluster-iwasj.mongodb.net/come-over?retryWrites=true", {
@@ -27,8 +28,10 @@ app.use(
 );
 app.use(bodyParser.json());
 app.use("/events", eventRoutes);
-app
-  .use("/tickets", ticketRoutes);
+app.use("/tickets", ticketRoutes);
+app.use("/user", userRoutes);
+
+
 
 // CORS
 app.use((req, res, next) => {
