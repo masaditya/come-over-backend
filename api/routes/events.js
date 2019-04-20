@@ -2,6 +2,10 @@ const express = require('express');
 const router = express.Router();
 const Event = require('../models/event');
 const mongoose = require('mongoose');
+const multer = require('multer');
+const upload = multer({
+    dest: 'uploads/'
+});
 
 
 // get method
@@ -24,7 +28,7 @@ router.get('/:eventId', (req, res) => {
 
 
 // post method 
-router.post("/", (req, res) => {
+router.post("/", upload.single('poster'), (req, res) => {
     const event = new Event({
         _id: new mongoose.Types.ObjectId(),
         nameEvent: req.body.name,

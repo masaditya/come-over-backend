@@ -7,8 +7,8 @@ const mongoose = require('mongoose');
 
 // get method
 router.get('/', (req, res) => {
-    Ticket.find().exec().then(ticket => {
-        res.json(ticket)
+    Ticket.find().populate('eventTicket', 'nameEvent locationEvent').exec().then(ticket => {
+        res.status(200).json(ticket)
     }).catch(err => {
         res.json(err)
     })
@@ -56,26 +56,6 @@ router.post("/", (req, res) => {
 
 
 })
-
-// update method
-// router.patch('/:ticketId', (req, res) => {
-//     const id = req.params.ticketId;
-//     Ticket.update({
-//         _id: id
-//     }, {
-//         $set: {
-//             nameEvent: req.body.name,
-//             userTicket: req.body.user,
-//             eventTicket: req.body.event,
-//             categoryTicket: req.body.category,
-//             priceTicket: req.body.price
-//         }
-//     }).exec().then(result => {
-//         res.send(result)
-//     }).catch(err => {
-//         res.send(err)
-//     })
-// });
 
 // delete method
 router.delete('/:ticketId', (req, res) => {
