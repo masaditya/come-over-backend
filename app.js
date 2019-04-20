@@ -19,6 +19,7 @@ mongoose.Promise = global.Promise;
 // middleware
 
 app.use(morgan("dev"));
+app.use('/uploads', express.static('uploads'));
 app.use(
   bodyParser.urlencoded({
     extended: false
@@ -26,7 +27,8 @@ app.use(
 );
 app.use(bodyParser.json());
 app.use("/events", eventRoutes);
-app.use("/tickets", ticketRoutes);
+app
+  .use("/tickets", ticketRoutes);
 
 // CORS
 app.use((req, res, next) => {

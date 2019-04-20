@@ -3,8 +3,33 @@ const router = express.Router();
 const Event = require('../models/event');
 const mongoose = require('mongoose');
 const multer = require('multer');
+
+
+const storage = multer.diskStorage({
+    destination: function (req, file, callback) {
+        callback(null, './uploads/')
+    },
+    filename: function (req, file, callback) {
+        callback(null, new Date().toISOString() + file.originalname)
+    }
+})
+
+const fileFilter = (req, file, callback) => {
+    // reject file
+    if (file.mimetype == 'image/jpeg' || file.mimetype == 'image/png') {
+        callback(null, true);
+
+    } else {
+        callback(null, false);
+    }
+};
+
 const upload = multer({
-    dest: 'uploads/'
+    storage: storage,
+    limits: {
+        fileSize: 1024 * 1024 * 5
+    },
+    fileFilter: fileFilter
 });
 
 
@@ -34,7 +59,7 @@ router.post("/", upload.single('poster'), (req, res) => {
         nameEvent: req.body.name,
         locationEvent: req.body.location,
         timeEvent: req.body.time,
-        posterEvent: req.body.poster,
+        posterEvent: req.file.path,
         descEvent: req.body.desc,
         organizerEvent: req.body.organizer,
         categoryEvent: req.body.category

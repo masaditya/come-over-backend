@@ -1,13 +1,14 @@
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose');
+
 const Ticket = require('../models/ticket');
 const Event = require('../models/event');
-const mongoose = require('mongoose');
 
 
 // get method
 router.get('/', (req, res) => {
-    Ticket.find().populate('eventTicket', 'nameEvent locationEvent').exec().then(ticket => {
+    Ticket.find().populate('eventTicket', 'nameEvent locationEvent posterEvent  ').exec().then(ticket => {
         res.status(200).json(ticket)
     }).catch(err => {
         res.json(err)
