@@ -3,6 +3,7 @@ const router = express.Router();
 const Event = require('../models/event');
 const mongoose = require('mongoose');
 const multer = require('multer');
+const cekAuth = require('../middleware/auth');
 
 
 const storage = multer.diskStorage({
@@ -53,7 +54,7 @@ router.get('/:eventId', (req, res) => {
 
 
 // post method 
-router.post("/", upload.single('poster'), (req, res) => {
+router.post("/", cekAuth, upload.single('poster'), (req, res) => {
     const event = new Event({
         _id: new mongoose.Types.ObjectId(),
         nameEvent: req.body.name,
@@ -105,8 +106,8 @@ router.delete('/:eventId', (req, res) => {
     }).exec().then(result => {
         res.json(result)
     }).catch(err => {
-        res.json(err)
-    })
+        res.json(err);
+    });
 });
 
 module.exports = router;
