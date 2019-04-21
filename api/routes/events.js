@@ -76,7 +76,7 @@ router.post("/", cekAuth, upload.single('poster'), (req, res) => {
 })
 
 // update method
-router.patch('/:eventId', (req, res) => {
+router.patch('/:eventId', cekAuth, (req, res) => {
     const id = req.params.eventId;
 
     Event.update({
@@ -99,7 +99,7 @@ router.patch('/:eventId', (req, res) => {
 });
 
 // delete method
-router.delete('/:eventId', (req, res) => {
+router.delete('/:eventId', cekAuth, (req, res) => {
     const id = req.params.eventId;
     Event.remove({
         _id: id
@@ -107,7 +107,7 @@ router.delete('/:eventId', (req, res) => {
         res.json(result)
     }).catch(err => {
         res.json(err);
-    });
+    })
 });
 
 module.exports = router;

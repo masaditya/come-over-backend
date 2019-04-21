@@ -4,10 +4,11 @@ const mongoose = require('mongoose');
 
 const Ticket = require('../models/ticket');
 const Event = require('../models/event');
+const cekAuth = require('../middleware/auth');
 
 
 // get method
-router.get('/', (req, res) => {
+router.get('/', cekAuth, (req, res) => {
     Ticket.find().populate('eventTicket', 'nameEvent locationEvent posterEvent  ').exec().then(ticket => {
         res.status(200).json(ticket)
     }).catch(err => {
@@ -15,7 +16,7 @@ router.get('/', (req, res) => {
     })
 })
 
-router.get('/:ticketId', (req, res) => {
+router.get('/:ticketId', cekAuth, (req, res) => {
     const id = req.params.ticketId;
     Ticket.findById(id).exec().then(ticket => {
         if (!ticket) {
@@ -30,7 +31,7 @@ router.get('/:ticketId', (req, res) => {
 
 
 // post method 
-router.post("/", (req, res) => {
+router.post("/", cekAuth, (req, res) => {
     Event.findById(req.body.eventTicket).then(
         event => {
 
@@ -59,7 +60,7 @@ router.post("/", (req, res) => {
 })
 
 // delete method
-router.delete('/:ticketId', (req, res) => {
+router.delete('/:ticketId', cekAuth, (req, res) => {
     const id = req.params.ticketId;
     Ticket.remove({
         _id: id
