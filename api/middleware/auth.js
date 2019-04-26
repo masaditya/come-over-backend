@@ -1,16 +1,17 @@
 const jwt = require('jsonwebtoken');
 
 module.exports = (req, res, next) => {
-    try {
-        const token = req.headers.authorization.split(" ")[1];
-        console.log(token);
-        const decoded = jwt.verify(token, process.env.JWT_KEY);
-        req.userData = decoded
-        next();
-    } catch (e) {
-        return res.status(401).json({
-            message: "token gakenek"
-        })
+    if (!req.headers.authorization) {
+        return res.status(401).send("Auth request")
     }
-
+    let token = req.headers.authorization.split(" ")[1];
+    if (token == "null") {
+        return res.status(401).send("Auth request")
+    }
+    let payload = jwt.verify(token, "secret");
+    if (!payload) {
+        return res.status(401).send("Auth request")
+    }
+    req.userId = payload.subject;
+    next();
 }
