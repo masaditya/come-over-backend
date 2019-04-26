@@ -7,70 +7,50 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
 router.post('/signup', (req, res, next) => {
-    User.find({
-        email: req.body.email
-    }).exec().then(user => {
-        if (user.length >= 1) {
-            return res.status(409).json({
-                message: "email exist"
-            })
-        } else {
-            bcrypt.hash(req.body.password, 10, (err, hash) => {
-                if (err) {
-                    return res.status(500).json(err);
-                } else {
-                    const user = new User({
-                        _id: new mongoose.Types.ObjectId(),
-                        email: req.body.email,
-                        password: hash
-                    });
-                    user.save().then(result => {
-                        res.json(result)
-                    }).catch(err => {
-                        res.json(err)
-                    })
-                }
-            })
-        }
+    let userData = req.body;
+    let user = new User({
+        _id: new mongoose.Types.ObjectId(),
+        email: userData.email,
+        password: userData.password
+    });
+    console.log(user);
+    user.save().then(result => {
+        let payload = {
+            subject: result._id
+        };
+        let token = jwt.sign(payload, "secret");
+        console.log(token);
+        res.send({
+            token
+        });
+    }).catch(err => {
+        console.log(err)
+        res.json({ "message": "goblok" })
     })
-
 })
 
 
 router.post('/login', (req, res) => {
-    User.find({
-        email: req.body.email
-    }).exec().then(user => {
-        if (user.length < 1) {
-            return res.status(404).json({
-                message: "auth fail"
-            })
+    let userData = req.body;
+    User.findOne({
+        email: userData.email
+    }).exec().then(result => {
+        if (!result) {
+            console.log("error email")
+            res.json({ "msg": "invalid email" });
         } else {
-            bcrypt.compare(req.body.password, user[0].password, (err, result) => {
-                if (err) {
-                    return res.status(404).json({
-                        message: "auth fail err"
-                    })
-                }
-                if (result) {
-                    const token = jwt.sign({
-                        email: user[0].email,
-                        userId: user[0]._id
-                    }, process.env.JWT_KEY, {
-                        expiresIn: "1h"
-                    });
-                    return res.json({
-                        message: "auth success",
-                        token: token
-                    });
-                }
-                return res.status(404).json({
-                    message: "auth fail"
-                });
-            })
+            if (result.password !== userData.password) {
+                res.json({ "msg ": "invalid password" })
+            } else {
+                let payload = {
+                    subject: result._id
+                };
+                let token = jwt.sign(payload, "secret");
+                res.send({ token });
+            }
         }
     }).catch(err => {
-        res.json(err)
+        console.log(err)
     })
 })
 
