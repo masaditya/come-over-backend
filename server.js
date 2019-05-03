@@ -4,6 +4,6 @@ const app = require('./app');
 const port = process.env.PORT || 3000;
 const server = http.Server(app)
 
-server.listen(process.env.PORT || 3000, function () {
+server.listen(port, function () {
     console.log("server run at port " + port);
 });
