@@ -31,7 +31,11 @@ app.use("/events", eventRoutes);
 app.use("/tickets", ticketRoutes);
 app.use("/user", userRoutes);
 
-
+app.use("/", (req, res) => {
+  res.json({
+    message: "hello there"
+  })
+})
 
 // CORS
 app.use((req, res, next) => {
