@@ -4,6 +4,9 @@ const Event = require('../models/event');
 const mongoose = require('mongoose');
 const multer = require('multer');
 const cekAuth = require('../middleware/auth');
+const cloudinary = require('cloudinary');
+
+require('../middleware/cloudinary');
 
 
 const storage = multer.diskStorage({
@@ -54,16 +57,16 @@ router.get('/:eventId', (req, res) => {
 
 
 // post method 
-router.post("/", cekAuth, upload.single('poster'), (req, res) => {
+router.post("/", (req, res) => {
     const event = new Event({
         _id: new mongoose.Types.ObjectId(),
-        nameEvent: req.body.name,
-        locationEvent: req.body.location,
-        timeEvent: req.body.time,
-        posterEvent: req.file.path,
-        descEvent: req.body.desc,
-        organizerEvent: req.body.organizer,
-        categoryEvent: req.body.category
+        nameEvent: req.body.nameEvent,
+        locationEvent: req.body.locationEvent,
+        timeEvent: req.body.timeEvent,
+        posterEvent: req.body.posterEvent,
+        descEvent: req.body.descEvent,
+        organizerEvent: req.body.organizerEvent,
+        categoryEvent: req.body.categoryEvent
     })
 
     event.save().then(result => {
@@ -109,5 +112,15 @@ router.delete('/:eventId', cekAuth, (req, res) => {
         res.json(err);
     })
 });
+
+
+router.post("/poster", upload.single('poster'), async (req, res, next) => {
+    const result = await cloudinary.v2.uploader.upload(req.file.path);
+    console.log(result);
+    res.json({
+        url: result.url
+    })
+})
+
 
 module.exports = router;

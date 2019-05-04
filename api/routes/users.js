@@ -11,7 +11,10 @@ router.post('/signup', (req, res, next) => {
     let user = new User({
         _id: new mongoose.Types.ObjectId(),
         email: userData.email,
-        password: userData.password
+        password: userData.password,
+        name: userData.name,
+        phone: userData.phone,
+        address: userData.address
     });
     console.log(user);
     user.save().then(result => {
@@ -25,7 +28,9 @@ router.post('/signup', (req, res, next) => {
         });
     }).catch(err => {
         console.log(err)
-        res.json({ "message": "goblok" })
+        res.json({
+            "message": "goblok"
+        })
     })
 })
 
@@ -37,21 +42,46 @@ router.post('/login', (req, res) => {
     }).exec().then(result => {
         if (!result) {
             console.log("error email")
-            res.json({ "msg": "invalid email" });
+            res.json({
+                "msg": "invalid email"
+            });
         } else {
             if (result.password !== userData.password) {
-                res.json({ "msg ": "invalid password" })
+                res.json({
+                    "msg ": "invalid password"
+                })
             } else {
                 let payload = {
                     subject: result._id
                 };
                 let token = jwt.sign(payload, "secret");
-                res.send({ token });
+                res.send({
+                    token
+                });
             }
         }
     }).catch(err => {
         console.log(err)
     })
+})
+
+
+
+router.get('/payload/', (req, res) => {
+    if (!req.headers.authorization) {
+        return res.status(401).send("Auth request")
+    }
+    // let token = req.params.token.split(" ")[1];
+    let token = req.headers.authorization.split(" ")[1];
+    if (token == "null") {
+        return res.status(401).send("Auth request")
+    }
+    let payload = jwt.verify(token, "secret");
+    if (!payload) {
+        return res.status(401).send("Auth request")
+    }
+    req.userId = payload.subject;
+    res.json(payload);
 })
 
 // delete user 
@@ -65,4 +95,12 @@ router.delete('/:userId', (req, res) => {
     })
 })
 
+
+router.get('/:id', (req, res) => {
+    User.findById(req.params.id).exec().then(result => {
+        res.json(result)
+    }).catch(err => {
+        res.json(result)
+    });
+});
 module.exports = router;
