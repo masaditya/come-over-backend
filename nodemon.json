@@ -1,6 +1,7 @@
 {
     "env": {
         "MONGO_ATLAS_PW": "new_user",
-        "JWT_KEY":"secret"
+        "JWT_KEY":"secret",
+        "CLOUD_NAME": "come0ver"
     }
 }
