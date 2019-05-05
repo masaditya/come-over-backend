@@ -14,7 +14,8 @@ router.post('/signup', (req, res, next) => {
         password: userData.password,
         name: userData.name,
         phone: userData.phone,
-        address: userData.address
+        address: userData.address,
+        organizer: userData.organizer
     });
     console.log(user);
     user.save().then(result => {
@@ -97,7 +98,16 @@ router.delete('/:userId', (req, res) => {
 
 
 router.get('/:id', (req, res) => {
+    console.log(req.params.id)
     User.findById(req.params.id).exec().then(result => {
+        res.json(result)
+    }).catch(err => {
+        res.json(err)
+    });
+});
+
+router.get('/', (req, res) => {
+    User.find().exec().then(result => {
         res.json(result)
     }).catch(err => {
         res.json(result)

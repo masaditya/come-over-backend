@@ -12,7 +12,8 @@ const userSchema = mongoose.Schema({
     },
     name: String,
     phone: String,
-    address: String
+    address: String,
+    organizer: String
 
 })
 

@@ -6,11 +6,25 @@ const Ticket = require('../models/ticket');
 const Event = require('../models/event');
 const User = require('../models/user');
 const cekAuth = require('../middleware/auth');
+const jwt = require('jsonwebtoken');
 
 
 // get method
 router.get('/', cekAuth, (req, res) => {
-    Ticket.find().populate('eventTicket', 'nameEvent locationEvent posterEvent').exec().then(ticket => {
+    let token = req.headers.authorization.split(" ")[1];
+    if (token == "null") {
+        return res.status(401).send("Auth request")
+    }
+    let payload = jwt.verify(token, "secret");
+    if (!payload) {
+        return res.status(401).send("Auth request")
+    }
+    req.userId = payload.subject;
+    console.log(payload.subject)
+    
+    Ticket.find({userTicket : payload.subject}).populate('eventTicket userTicket', 'nameEvent locationEvent posterEvent email').exec().then(ticket => {
+       
+
         res.status(200).json(ticket)
     }).catch(err => {
         res.json(err)
@@ -19,8 +33,9 @@ router.get('/', cekAuth, (req, res) => {
 
 router.get('/:ticketId', cekAuth, (req, res) => {
     const id = req.params.ticketId;
-    Ticket.findById(id).populate('eventTicket userTicket', '*').exec().then(ticket => {
+    Ticket.findById(id).populate('eventTicket userTicket', 'nameEvent locationEvent posterEvent email password').exec().then(ticket => {
 
+        User.findById(ticket.userTicket._id).exec().then(result => console.log(result))
         if (!ticket) {
             res.json("Not Found")
         } else {
