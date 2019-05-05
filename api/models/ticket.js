@@ -7,6 +7,11 @@ const ticketSchema = mongoose.Schema({
         ref: 'Event',
         required: true
     },
+    userTicket: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
     categoryTicket: String,
     priceTicket: {
         type: Number,

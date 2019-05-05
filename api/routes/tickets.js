@@ -4,12 +4,13 @@ const mongoose = require('mongoose');
 
 const Ticket = require('../models/ticket');
 const Event = require('../models/event');
+const User = require('../models/user');
 const cekAuth = require('../middleware/auth');
 
 
 // get method
 router.get('/', cekAuth, (req, res) => {
-    Ticket.find().populate('eventTicket', 'nameEvent locationEvent posterEvent  ').exec().then(ticket => {
+    Ticket.find().populate('eventTicket', 'nameEvent locationEvent posterEvent').exec().then(ticket => {
         res.status(200).json(ticket)
     }).catch(err => {
         res.json(err)
@@ -18,7 +19,8 @@ router.get('/', cekAuth, (req, res) => {
 
 router.get('/:ticketId', cekAuth, (req, res) => {
     const id = req.params.ticketId;
-    Ticket.findById(id).exec().then(ticket => {
+    Ticket.findById(id).populate('eventTicket userTicket', '*').exec().then(ticket => {
+
         if (!ticket) {
             res.json("Not Found")
         } else {
@@ -34,6 +36,7 @@ router.get('/:ticketId', cekAuth, (req, res) => {
 router.post("/", cekAuth, (req, res) => {
     Event.findById(req.body.eventTicket).then(
         event => {
+            console.log(event);
 
             if (!event) {
                 return res.json("Not found")
@@ -41,12 +44,13 @@ router.post("/", cekAuth, (req, res) => {
 
             const ticket = new Ticket({
                 _id: new mongoose.Types.ObjectId(),
-                eventTicket: req.body.event,
+                eventTicket: event._id,
+                userTicket: req.body.userTicket,
                 categoryTicket: req.body.category,
                 priceTicket: req.body.price
             });
 
-
+            console.log(ticket);
             return ticket.save()
 
         }
