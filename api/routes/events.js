@@ -115,11 +115,17 @@ router.delete('/:eventId', cekAuth, (req, res) => {
 
 
 router.post("/poster", upload.single('poster'), async (req, res, next) => {
-    const result = await cloudinary.v2.uploader.upload(req.file.path);
-    console.log(result);
-    res.json({
-        url: result.url
+
+    console.log(req.file.path)
+    await cloudinary.v2.uploader.upload(req.file.path).then(result => {
+        console.log(result);
+        res.json({
+            url: result.url
+        })
+    }).catch(err => {
+        console.log(err);
     })
+
 })
 
 
