@@ -97,9 +97,10 @@ router.delete('/:userId', (req, res) => {
 })
 
 
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
     console.log(req.params.id)
-    User.findById(req.params.id).exec().then(result => {
+    await User.findById(req.params.id).exec().then(result => {
+        console.log(result)
         res.json(result)
     }).catch(err => {
         res.json(err)
