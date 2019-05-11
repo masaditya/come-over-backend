@@ -12,10 +12,17 @@ const ticketSchema = mongoose.Schema({
         ref: 'User',
         required: true
     },
-    categoryTicket: String,
+    categoryTicket: {
+        type: String,
+        required: true
+    },
     priceTicket: {
         type: Number,
         default: 0
+    },
+    status: {
+        type: Boolean,
+        default: false
     }
 })
 

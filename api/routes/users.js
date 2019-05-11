@@ -96,12 +96,29 @@ router.delete('/:userId', (req, res) => {
     })
 })
 
+router.patch('/', (req, res) => {
+    User.update({
+        _id: req.body._id
+    }, {
+        $set: {
+            organizer: req.body.organizer
+        }
+    }).exec().then(result => {
+        res.json({
+            _id: req.body._id,
+            organizer: req.body.organizer
+        })
+    }).catch(err => {
+        res.json(err)
+    });
+});
+
 
 router.get('/:id', async (req, res) => {
     console.log(req.params.id)
     await User.findById(req.params.id).exec().then(result => {
         console.log(result)
-        res.json(result)
+        res.json(result);
     }).catch(err => {
         res.json(err)
     });

@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const multer = require('multer');
 const cekAuth = require('../middleware/auth');
 const cloudinary = require('cloudinary');
+const jwt = require('jsonwebtoken');
 
 require('../middleware/cloudinary');
 
@@ -40,6 +41,26 @@ const upload = multer({
 // get method
 router.get('/', (req, res) => {
     Event.find().exec().then(events => {
+        res.status(200).json(events)
+    }).catch(err => {
+        res.json(err)
+    })
+})
+
+router.get('/manage', (req, res) => {
+    let token = req.headers.authorization.split(" ")[1];
+    if (token == "null") {
+        return res.status(401).send("Auth request")
+    }
+    let payload = jwt.verify(token, "secret");
+    if (!payload) {
+        return res.status(401).send("Auth request")
+    }
+    req.userId = payload.subject;
+    console.log(payload.subject)
+    Event.find({
+        organizerEvent: payload.subject
+    }).exec().then(events => {
         res.status(200).json(events)
     }).catch(err => {
         res.json(err)
@@ -107,7 +128,7 @@ router.delete('/:eventId', cekAuth, (req, res) => {
     Event.remove({
         _id: id
     }).exec().then(result => {
-        res.json(result)
+        res.json(result);
     }).catch(err => {
         res.json(err);
     })

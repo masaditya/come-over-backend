@@ -22,9 +22,13 @@ router.get('/', cekAuth, (req, res) => {
     req.userId = payload.subject;
     console.log(payload.subject)
 
-    Ticket.find({ userTicket: payload.subject }).populate('eventTicket userTicket', 'nameEvent locationEvent posterEvent email').exec().then(ticket => {
+    Ticket.find({
+        userTicket: payload.subject
+    }).populate('eventTicket userTicket', 'nameEvent locationEvent posterEvent timeEvent organizerEvent email').exec().then(ticket => {
 
 
+
+        // console.log(ticket.eventTicket.populate("organizerEvent", "organizer"));
         res.status(200).json(ticket)
     }).catch(err => {
         res.json(err)
@@ -47,7 +51,9 @@ router.get('/:ticketId', cekAuth, (req, res) => {
 
 router.get('/event/:eventId', cekAuth, async (req, res) => {
     const id = req.params.eventId;
-    await Ticket.find({ eventTicket: id }).populate("userTicket", "name email phone").exec().then(ticket => {
+    await Ticket.find({
+        eventTicket: id
+    }).populate("userTicket", "name email phone").exec().then(ticket => {
         res.json(ticket)
     }).catch(err => {
         res.json(err)

@@ -10,10 +10,22 @@ const userSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    name: String,
-    phone: String,
-    address: String,
-    organizer: String
+    name: {
+        type: String,
+        required: true
+    },
+    phone: {
+        type: String,
+        required: true
+    },
+    address: {
+        type: String,
+        required: true
+    },
+    organizer: {
+        type: String,
+        default: null,
+    }
 
 })
 
