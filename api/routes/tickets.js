@@ -24,7 +24,7 @@ router.get('/', cekAuth, (req, res) => {
 
     Ticket.find({
         userTicket: payload.subject
-    }).populate('eventTicket userTicket', 'nameEvent locationEvent posterEvent timeEvent organizerEvent email').exec().then(ticket => {
+    }).populate('eventTicket userTicket', 'nameEvent locationEvent posterEvent timeEvent name organizerEvent email').exec().then(ticket => {
 
 
 
@@ -37,7 +37,7 @@ router.get('/', cekAuth, (req, res) => {
 
 router.get('/:ticketId', cekAuth, (req, res) => {
     const id = req.params.ticketId;
-    Ticket.findById(id).populate('eventTicket userTicket', 'nameEvent locationEvent posterEvent email password').exec().then(ticket => {
+    Ticket.findById(id).populate('eventTicket userTicket', 'nameEvent locationEvent posterEvent name email password').exec().then(ticket => {
         User.findById(ticket.userTicket._id).exec().then(result => console.log(result))
         if (!ticket) {
             res.json("Not Found")
