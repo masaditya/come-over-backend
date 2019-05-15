@@ -87,9 +87,22 @@ router.post("/", cekAuth, (req, res) => {
         res.json(result)
     }).catch(err => {
         res.json(err)
+    });
+});
+
+router.patch('/:ticketId/done', (req, res) => {
+    const id = req.params.ticketId;
+    Ticket.update({
+        _id: id
+    }, {
+        $set: {
+            status: true
+        }
+    }).exec().then(result => {
+        res.json(result)
+    }).catch(err => {
+        res.json(err)
     })
-
-
 })
 
 // delete method
