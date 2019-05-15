@@ -99,7 +99,9 @@ router.patch('/:ticketId/done', (req, res) => {
             status: true
         }
     }).exec().then(result => {
-        res.json(result)
+        res.json({
+            message : "Kenek Bro"
+        })
     }).catch(err => {
         res.json(err)
     })
