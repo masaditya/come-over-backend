@@ -8,6 +8,7 @@ const cors = require('cors')
 const eventRoutes = require("./api/routes/events");
 const ticketRoutes = require("./api/routes/tickets");
 const userRoutes = require('./api/routes/users');
+const menuRoutes = require('./api/routes/menus');
 
 mongoose.connect(
   "mongodb+srv://new_user:new_user@mycluster-iwasj.mongodb.net/come-over?retryWrites=true", {
@@ -30,6 +31,7 @@ app.use(bodyParser.json());
 app.use("/events", eventRoutes);
 app.use("/tickets", ticketRoutes);
 app.use("/user", userRoutes);
+app.use("/menu", menuRoutes);
 
 
 // CORS
@@ -43,21 +45,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// error handling
-// app.use((req, res, next) => {
-//   const error = new Error("Not Found");
-//   error.status(404);
-//   next(error);
-// });
-
-// app.use((error, req, res, next) => {
-//   res.status(error.status || 500);
-//   res.json({
-//     error: {
-//       message: error.message
-//     }
-//   });
-// });
 
 app.use("/", (req, res) => {
   res.json({
