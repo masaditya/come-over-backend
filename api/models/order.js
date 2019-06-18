@@ -7,13 +7,16 @@ const orderSchema = mongoose.Schema({
         required: true
     },
     menus: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Menu',
-        required: true
+        menu: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Menu',
+            required: true
+        }
     }],
     total: {
         type: Number,
-        default: 0
+        default: 0,
+        required: true
     },
     status: {
         type: Boolean,

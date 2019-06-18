@@ -2,10 +2,11 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const Menu = require('../models/menu');
+const Order = require('../models/order');
 
 
 router.get('/', async (req, res) => {
-    await Menu.find().exec().then(menus => {
+    await Order.find().exec().then(menus => {
         res.status(200).json({
             size: menus.length,
             data: menus
@@ -16,32 +17,41 @@ router.get('/', async (req, res) => {
 })
 
 router.get('/:id', async (req, res) => {
-    await Menu.findById(req.params.id).exec().then(menus => {
+    await Order.findById(req.params.id).exec().then(menus => {
         res.status(200).json(menus)
+    }).catch(err => {
+        res.json(err)
+    })
+})
+
+// post new order
+router.post("/", async (req, res) => {
+
+    var order = new Order({
+        _id: new mongoose.Types.ObjectId(),
+        customer: req.body.customer,
+        menus: [],
+        total: 0
+    })
+
+    console.log(menus)
+    res.json({
+        id: order._id,
+        data: order
+    })
+})
+
+// add menu in order
+router.post("/:id", async (req, res) => {
+    console.log(req.params.id)
+    await Menu.findById(req.params.id).exec().then(doc => {
+        res.json(doc)
+        console.log(doc)
     }).catch(err => {
         res.json(err)
     });
 });
 
-
-
-
-router.post("/", async (req, res) => {
-    const menu = new Menu({
-        _id: new mongoose.Types.ObjectId(),
-        menu: req.body.menu,
-        price: req.body.price
-    })
-
-    await menu.save().then(result => {
-        res.status(200).json({
-            id: menu._id,
-            data: menu
-        })
-    }).catch(err => {
-        res.json(err)
-    });
-})
 
 // update method
 router.patch('/:id', async (req, res) => {

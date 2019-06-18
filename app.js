@@ -9,6 +9,7 @@ const eventRoutes = require("./api/routes/events");
 const ticketRoutes = require("./api/routes/tickets");
 const userRoutes = require('./api/routes/users');
 const menuRoutes = require('./api/routes/menus');
+const orderRoutes = require('./api/routes/orders');
 
 mongoose.connect(
   "mongodb+srv://new_user:new_user@mycluster-iwasj.mongodb.net/come-over?retryWrites=true", {
@@ -32,6 +33,8 @@ app.use("/events", eventRoutes);
 app.use("/tickets", ticketRoutes);
 app.use("/user", userRoutes);
 app.use("/menu", menuRoutes);
+app.use("/order", orderRoutes);
+
 
 
 // CORS
