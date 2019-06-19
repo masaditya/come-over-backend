@@ -4,6 +4,7 @@ const morgan = require("morgan");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const cors = require('cors')
+const Temp = require('./api/models/temp');
 // routes
 const eventRoutes = require("./api/routes/events");
 const ticketRoutes = require("./api/routes/tickets");
@@ -35,6 +36,17 @@ app.use("/user", userRoutes);
 app.use("/menu", menuRoutes);
 app.use("/order", orderRoutes);
 
+
+app.use('/temp', async (req, res) => {
+  await Temp.find().select("menu price").exec().then(menus => {
+    res.status(200).json({
+      size: menus.length,
+      data: menus
+    })
+  }).catch(err => {
+    res.json(err)
+  })
+})
 
 
 // CORS

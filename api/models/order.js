@@ -8,8 +8,11 @@ const orderSchema = mongoose.Schema({
     },
     menus: [{
         menu: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Menu',
+            type: String,
+            required: true
+        },
+        price: {
+            type: Number,
             required: true
         }
     }],
