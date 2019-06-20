@@ -32,7 +32,7 @@ router.get("/:id", async (req, res) => {
 
 // post new order
 router.post("/", async (req, res) => {
-  Temp.remove({}).exec()
+  await Temp.remove({}).exec().then().catch()
   var order = new Order({
     _id: new mongoose.Types.ObjectId(),
     customer: req.body.customer,
