@@ -5,6 +5,10 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const cors = require('cors')
 const Temp = require('./api/models/temp');
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
+
+
 // routes
 const eventRoutes = require("./api/routes/events");
 const ticketRoutes = require("./api/routes/tickets");
@@ -33,8 +37,12 @@ app.use(bodyParser.json());
 app.use("/events", eventRoutes);
 app.use("/tickets", ticketRoutes);
 app.use("/user", userRoutes);
-app.use("/menu", menuRoutes);
-app.use("/order", orderRoutes);
+app.use("/menu", menuRoutes, (req, res) => {
+  io.emit('message', req.body);
+});
+app.use("/order", orderRoutes, (req, res) => {
+  io.emit('message', req.body);
+});
 
 
 app.use('/temp', async (req, res) => {
@@ -46,6 +54,11 @@ app.use('/temp', async (req, res) => {
   }).catch(err => {
     res.json(err)
   })
+})
+
+
+io.on('connection', () => {
+  console.log('a user is connected')
 })
 
 

@@ -30,24 +30,9 @@ router.get("/:id", async (req, res) => {
     });
 });
 
-
-// router.get("/", async (req, res) => {
-//   await Temp.find()
-//     .exec()
-//     .then(menus => {
-//       res.status(200).json({
-//         size: menus.length,
-//         data: menus
-//       });
-//     })
-//     .catch(err => {
-//       res.json(err);
-//     });
-// });
-
 // post new order
 router.post("/", async (req, res) => {
-
+  Temp.remove({}).exec()
   var order = new Order({
     _id: new mongoose.Types.ObjectId(),
     customer: req.body.customer,
