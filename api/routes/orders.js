@@ -32,7 +32,6 @@ router.get("/:id", async (req, res) => {
 
 // post new order
 router.post("/", async (req, res) => {
-  await Temp.remove({}).exec().then().catch()
   var order = new Order({
     _id: new mongoose.Types.ObjectId(),
     customer: req.body.customer,
@@ -46,6 +45,7 @@ router.post("/", async (req, res) => {
         msg: "order created",
         data: order
       });
+      Temp.remove({}).exec().then().catch()
     })
     .catch(err => {
       res.json(err);
