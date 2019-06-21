@@ -79,7 +79,26 @@ router.post("/:id", async (req, res) => {
 });
 
 // update method
-router.patch("/:id", async (req, res) => {});
+router.patch("/:id", async (req, res) => {
+  const id = req.params.id
+  Order.update({
+    _id: id
+  }, {
+    $set: {
+      status: true
+    }
+  }).exec().then(result => {
+    res.json({
+      msg: "successfully updated",
+      data: result
+    })
+  }).catch(err => {
+    res.json({
+      msg: "failed updated",
+      data: err
+    })
+  })
+});
 
 // delete method
 router.delete("/:id", async (req, res) => {});
